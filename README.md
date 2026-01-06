@@ -4,16 +4,22 @@ This repository provides a generic template for generating floating bar graphs f
 
 ## Setup
 
-1. Install dependencies:
+1. Set up Python environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   ```
+
+2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-2. Place your market data CSV file in the `data/csv/` directory. The file should have columns for position titles and salary ranges for different locations, similar to the sample data.
+3. Place your market data CSV file in the `data/csv/` directory. The file should have columns for position titles and salary ranges for different locations, similar to the sample data.
 
-3. Update the data file to match your location's information. Ensure the column for your location is named `{location_name} Current {fy_year}` (e.g., "Melrose Current FY22").
+4. Update the data file to match your location's information. Ensure the column for your location is named `{location_name} Current {fy_year}` (e.g., "Melrose Current FY22").
 
-4. If needed, adjust the `bad_columns` list in `floating_bar_graphs.py` to remove any summary columns specific to your data.
+5. If needed, adjust the `bad_columns` list in `floating_bar_graphs.py` to remove any summary columns specific to your data.
 
 ## Usage
 
