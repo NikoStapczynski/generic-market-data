@@ -138,7 +138,7 @@ def graph(df):
 def main():
     parser = argparse.ArgumentParser(description='Generate floating bar graphs for market data.')
     parser.add_argument('--location_name', type=str, default='SampleLocation', help='Name of the location for graphs')
-    parser.add_argument('--fy_year', type=str, default='FY22', help='Fiscal year')
+    parser.add_argument('--fy_year', type=str, default='FY26', help='Fiscal year')
     parser.add_argument('--data_file', type=str, default='sample_market_data.csv', help='CSV data file name in data/csv/')
 
     args = parser.parse_args()

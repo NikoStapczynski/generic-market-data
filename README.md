@@ -30,7 +30,7 @@ python floating_bar_graphs.py --location_name "YourLocation" --fy_year "FY23" --
 ```
 
 - `--location_name`: Name of your location (default: SampleLocation)
-- `--fy_year`: Fiscal year (default: FY22)
+- `--fy_year`: Fiscal year (default: FY26)
 - `--data_file`: Name of your CSV file in data/csv/ (default: sample_market_data.csv)
 
 The script will generate:
