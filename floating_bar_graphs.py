@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from pathlib import Path
+import argparse
 
 title = 'POSITION TITLE'
 salary = 'salary'
@@ -11,9 +12,8 @@ town = 'town'
 sal_min = 'salary_min'
 sal_max = 'salary_max'
 
-
-def read_csv():
-    return pd.read_csv('csv/Melrose FY22 Market Data Report using Current pay 12-11- 2021.csv',
+def read_csv(file_path):
+    return pd.read_csv(file_path,
                        dtype='float64',
                        converters={title: str})
 
@@ -25,7 +25,7 @@ def remove_summary_columns(df):
         "Comp Lo-Hi Range",
         "Comp Median",
         "75th Percent of Market",
-        "% Melrose Higher Lower than 75th Percentile"
+        "% Client Higher Lower than 75th Percentile"
     ]
     for c in bad_columns:
         df = df.drop(c, axis=1)
@@ -62,7 +62,7 @@ def make_city_column(df):
     ).dropna()
 
 
-def combine_high_low(df):
+def combine_high_low(df, client_town):
     groups = df.groupby([town, title])
 
     def helper(group):
@@ -70,13 +70,13 @@ def combine_high_low(df):
         maximum = group[salary].max()
 
         if minimum == maximum:
-            minimum = minimum * .99 
+            minimum = minimum * .99
             maximum = maximum
 
         client_color = '#AAA'
         default_color = '#FFF'
 
-        if group[town].iloc[0] == 'Melrose Current FY22':
+        if group[town].iloc[0] == client_town:
             color = client_color
         else:
             color = default_color
@@ -136,12 +136,22 @@ def graph(df):
 
 
 def main():
-    df = read_csv()
+    parser = argparse.ArgumentParser(description='Generate floating bar graphs for town market data.')
+    parser.add_argument('--town_name', type=str, default='SampleTown', help='Name of the town for graphs')
+    parser.add_argument('--fy_year', type=str, default='FY22', help='Fiscal year')
+    parser.add_argument('--data_file', type=str, default='sample_market_data.csv', help='CSV data file name in data/csv/')
+
+    args = parser.parse_args()
+
+    file_path = f'data/csv/{args.data_file}'
+    client_town = f'{args.town_name} Current {args.fy_year}'
+
+    df = read_csv(file_path)
     df = remove_summary_columns(df)
     df = combine_lines(df)
     df = normalize(df)
     df = make_city_column(df)
-    df = combine_high_low(df)
+    df = combine_high_low(df, client_town)
     graph(df)
 
 
