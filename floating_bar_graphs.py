@@ -8,7 +8,7 @@ import argparse
 
 title = 'POSITION TITLE'
 salary = 'salary'
-town = 'town'
+location = 'location'
 sal_min = 'salary_min'
 sal_max = 'salary_max'
 
@@ -58,12 +58,12 @@ def make_city_column(df):
         id_vars=[title],
         value_vars=list(df.columns[1:]),
         value_name=salary,
-        var_name=town
+        var_name=location
     ).dropna()
 
 
-def combine_high_low(df, client_town):
-    groups = df.groupby([town, title])
+def combine_high_low(df, client_location):
+    groups = df.groupby([location, title])
 
     def helper(group):
         minimum = group[salary].min()
@@ -76,20 +76,20 @@ def combine_high_low(df, client_town):
         client_color = '#AAA'
         default_color = '#FFF'
 
-        if group[town].iloc[0] == client_town:
+        if group[location].iloc[0] == client_location:
             color = client_color
         else:
             color = default_color
 
         return pd.Series(
             data={
-                town: group[town].iloc[0],
+                location: group[location].iloc[0],
                 title: group[title].iloc[0],
                 sal_min: minimum,
                 sal_max: maximum,
                 'color': color
             },
-            index=[town, title, sal_min, sal_max, 'color']
+            index=[location, title, sal_min, sal_max, 'color']
         )
 
     return pd.concat([helper(group) for name, group in groups], axis=1).transpose()
@@ -112,7 +112,7 @@ def graph(df):
         group.sort_values(inplace=True, by=sal_max, ascending=True)
         fig = go.Figure([go.Bar(
             name=title,
-            x=group[town],
+            x=group[location],
             base=group[sal_min],
             y=group[sal_max]-group[sal_min],
             marker_color=group['color'],
@@ -126,7 +126,7 @@ def graph(df):
 
         fig.update_traces(dict(marker_line_width=1, marker_line_color="black"))
         fig.update_yaxes(showgrid=True, gridcolor="#AAA", title_text="Pay Range (Hourly)")
-        fig.update_xaxes(title_text="Town")
+        fig.update_xaxes(title_text="Location")
         fig.update_layout(title=name, template="simple_white")
         fig.show()
         #fig.write_image("images/"+name+".svg")
@@ -136,22 +136,22 @@ def graph(df):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Generate floating bar graphs for town market data.')
-    parser.add_argument('--town_name', type=str, default='SampleTown', help='Name of the town for graphs')
+    parser = argparse.ArgumentParser(description='Generate floating bar graphs for market data.')
+    parser.add_argument('--location_name', type=str, default='SampleLocation', help='Name of the location for graphs')
     parser.add_argument('--fy_year', type=str, default='FY22', help='Fiscal year')
     parser.add_argument('--data_file', type=str, default='sample_market_data.csv', help='CSV data file name in data/csv/')
 
     args = parser.parse_args()
 
     file_path = f'data/csv/{args.data_file}'
-    client_town = f'{args.town_name} Current {args.fy_year}'
+    client_location = f'{args.location_name} Current {args.fy_year}'
 
     df = read_csv(file_path)
     df = remove_summary_columns(df)
     df = combine_lines(df)
     df = normalize(df)
     df = make_city_column(df)
-    df = combine_high_low(df, client_town)
+    df = combine_high_low(df, client_location)
     graph(df)
 
 
