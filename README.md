@@ -38,10 +38,21 @@ The script will generate graphs in the specified formats in the `output/` subdir
 
 ## Data Format
 
-The CSV should have:
-- A 'POSITION TITLE' column
-- Columns for each location with salary data (high/low ranges on alternating rows)
-- Summary columns that will be removed (adjust in the script if needed)
+The CSV should have a 'POSITION TITLE' column and columns for each location with salary data. The data alternates between high and low salary ranges on consecutive rows for each position.
+
+Example structure:
+
+| Row | POSITION TITLE | Location A | Location B |
+|-----|----------------|------------|------------|
+| 1   | Job Title 1    | 100        | 95         |
+| 2   | Job Title 1    | 80         | 75         |
+| 3   | Job Title 2    | 120        | 110        |
+| 4   | Job Title 2    | 90         | 85         |
+
+- Row 1 & 2: High and low salaries for Job Title 1
+- Row 3 & 4: High and low salaries for Job Title 2
+
+The script automatically removes summary columns (e.g., "Comp Data Points", "Comp Average"). Adjust the `bad_columns` list in the script if your data has different summary columns.
 
 ## Adapting for a New Location
 
