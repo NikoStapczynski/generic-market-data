@@ -147,7 +147,7 @@ def main():
 
     args = parser.parse_args()
 
-    file_path = f'data/csv/{args.data_file}'
+    file_path = f'input/csv/{args.data_file}'
     client_location = f'{args.location_name} Current {args.fy_year}'
 
     df = read_csv(file_path)

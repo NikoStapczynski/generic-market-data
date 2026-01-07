@@ -15,7 +15,7 @@ This repository provides a generic template for generating floating bar graphs f
    pip install -r requirements.txt
    ```
 
-3. Place your market data CSV file in the `data/csv/` directory. The file should have columns for position titles and salary ranges for different locations, similar to the sample data.
+3. Place your market data CSV file in the `input/csv/` directory. The file should have columns for position titles and salary ranges for different locations, similar to the sample data.
 
 4. Update the data file to match your location's information. Ensure the column for your location is named `{location_name} Current {fy_year}` (e.g., "Melrose Current FY22").
 
@@ -26,16 +26,15 @@ This repository provides a generic template for generating floating bar graphs f
 Run the script with your location parameters:
 
 ```bash
-python floating_bar_graphs.py --location_name "YourLocation" --fy_year "FY23" --data_file "your_data.csv"
+python floating_bar_graphs.py --location_name "YourLocation" --fy_year "FY23" --data_file "your_data.csv" --output html pdf png
 ```
 
 - `--location_name`: Name of your location (default: SampleLocation)
 - `--fy_year`: Fiscal year (default: current fiscal year, e.g., FY26)
-- `--data_file`: Name of your CSV file in data/csv/ (default: sample_market_data.csv)
+- `--data_file`: Name of your CSV file in input/csv/ (default: sample_market_data.csv)
+- `--output`: Output formats (default: html). Choices: html, pdf, png, svg, jpg, jpeg, webp, eps
 
-The script will generate:
-- Interactive HTML graphs in the `html/` directory
-- PDF versions in the `pdf/` directory
+The script will generate graphs in the specified formats in the `output/` subdirectories (e.g., `output/html/`, `output/pdf/`, etc.).
 
 ## Data Format
 
