@@ -1,2 +1,5 @@
 pandas
 plotly
+openpyxl
+odfpy
+xlrd

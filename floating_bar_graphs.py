@@ -13,10 +13,17 @@ location = 'location'
 sal_min = 'salary_min'
 sal_max = 'salary_max'
 
-def read_csv(file_path):
-    return pd.read_csv(file_path,
-                       dtype='float64',
-                       converters={title: str})
+def read_data(file_path, ext):
+    if ext == '.csv':
+        return pd.read_csv(file_path,
+                           dtype='float64',
+                           converters={title: str})
+    elif ext in ['.xls', '.xlsx']:
+        return pd.read_excel(file_path, dtype='float64', converters={title: str})
+    elif ext == '.ods':
+        return pd.read_excel(file_path, engine='odf', dtype='float64', converters={title: str})
+    else:
+        raise ValueError(f"Unsupported file format: {ext}")
 
 
 def remove_summary_columns(df):
@@ -142,15 +149,25 @@ def main():
     parser = argparse.ArgumentParser(description='Generate floating bar graphs for market data.')
     parser.add_argument('--location_name', type=str, default='SampleLocation', help='Name of the location for graphs')
     parser.add_argument('--fy_year', type=str, default=f'FY{datetime.datetime.now().year % 100:02d}', help='Fiscal year')
-    parser.add_argument('--data_file', type=str, default='sample_market_data.csv', help='CSV data file name in input/csv/')
+    parser.add_argument('--data_file', type=str, default='sample_market_data.csv', help='Data file name (supports .csv, .xls, .xlsx, .ods) in input/ subdirectories')
     parser.add_argument('--output', nargs='+', default=['html'], choices=['html', 'pdf', 'png', 'svg', 'jpg', 'jpeg', 'webp', 'eps'], help='Output formats: html, pdf, png, svg, jpg, jpeg, webp, eps')
 
     args = parser.parse_args()
 
-    file_path = f'input/csv/{args.data_file}'
+    ext = os.path.splitext(args.data_file)[1].lower()
+    if ext == '.csv':
+        subdir = 'csv'
+    elif ext in ['.xls', '.xlsx']:
+        subdir = 'xls'
+    elif ext == '.ods':
+        subdir = 'ods'
+    else:
+        raise ValueError(f"Unsupported file extension: {ext}")
+
+    file_path = f'input/{subdir}/{args.data_file}'
     client_location = f'{args.location_name} Current {args.fy_year}'
 
-    df = read_csv(file_path)
+    df = read_data(file_path, ext)
     df = remove_summary_columns(df)
     df = combine_lines(df)
     df = normalize(df)
