@@ -1,4 +1,11 @@
-images/
-html/
-pdf/
+__pycache__/
+/input/csv/
+/input/ods/
+/input/xls/
+/output/images/
+/output/html/
+/output/pdf/
+.vscode/
+.idea/
 venv/
+.venv/

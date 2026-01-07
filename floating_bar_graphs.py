@@ -96,17 +96,7 @@ def combine_high_low(df, client_location):
     return pd.concat([helper(group) for name, group in groups], axis=1).transpose()
 
 
-def graph(df):
-
-    if not os.path.exists("images"):
-        os.mkdir("images")
-
-    if not os.path.exists("html"):
-        os.mkdir("html")
-
-    if not os.path.exists("pdf"):
-        os.mkdir("pdf")
-
+def graph(df, output):
 
     for name, group in df.groupby(title):
 
@@ -130,9 +120,21 @@ def graph(df):
         fig.update_xaxes(title_text="Location")
         fig.update_layout(title=name, template="simple_white")
         fig.show()
-        #fig.write_image("images/"+name+".svg")
-        fig.write_html("html/"+name+".html")
-        fig.write_image("pdf/"+name+".pdf")
+        output_configs = {
+            'html': ('output/html', lambda fig, path: fig.write_html(path)),
+            'pdf': ('output/pdf', lambda fig, path: fig.write_image(path)),
+            'png': ('output/png', lambda fig, path: fig.write_image(path)),
+            'svg': ('output/svg', lambda fig, path: fig.write_image(path)),
+            'jpg': ('output/jpg', lambda fig, path: fig.write_image(path)),
+            'jpeg': ('output/jpeg', lambda fig, path: fig.write_image(path)),
+            'webp': ('output/webp', lambda fig, path: fig.write_image(path)),
+            'eps': ('output/eps', lambda fig, path: fig.write_image(path)),
+        }
+        for fmt in output:
+            if fmt in output_configs:
+                dir_path, write_func = output_configs[fmt]
+                os.makedirs(dir_path, exist_ok=True)
+                write_func(fig, f"{dir_path}/{name}.{fmt}")
         
 
 
@@ -140,7 +142,8 @@ def main():
     parser = argparse.ArgumentParser(description='Generate floating bar graphs for market data.')
     parser.add_argument('--location_name', type=str, default='SampleLocation', help='Name of the location for graphs')
     parser.add_argument('--fy_year', type=str, default=f'FY{datetime.datetime.now().year % 100:02d}', help='Fiscal year')
-    parser.add_argument('--data_file', type=str, default='sample_market_data.csv', help='CSV data file name in data/csv/')
+    parser.add_argument('--data_file', type=str, default='sample_market_data.csv', help='CSV data file name in input/csv/')
+    parser.add_argument('--output', nargs='+', default=['html'], choices=['html', 'pdf', 'png', 'svg', 'jpg', 'jpeg', 'webp', 'eps'], help='Output formats: html, pdf, png, svg, jpg, jpeg, webp, eps')
 
     args = parser.parse_args()
 
@@ -153,7 +156,7 @@ def main():
     df = normalize(df)
     df = make_city_column(df)
     df = combine_high_low(df, client_location)
-    graph(df)
+    graph(df, args.output)
 
 
 if __name__ == "__main__":
