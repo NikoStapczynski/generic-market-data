@@ -50,12 +50,12 @@ Compgrapher (Compensation Grapher) is a tool for generating floating bar graphs 
 
    **Sample Output:**
 
-   ![Job Title 1](output/png/Job%20Title%201.png)
+   <img src="output/png/Job%20Title%201.png" width="50%" alt="Job Title 1">
 
    *Job Title 1: Floating bar graph comparing salaries between Employer A and Employer B*
 
-   ![Job Title 2](output/png/Job%20Title%202.png)
-   
+   <img src="output/png/Job%20Title%202.png" width="50%" alt="Job Title 2">
+
    *Job Title 2: Floating bar graph comparing salaries between Employer A and Employer B*
 
 ## Usage
