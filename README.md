@@ -43,7 +43,7 @@ Compgrapher (Compensation Grapher) is a tool for generating floating bar graphs 
 
    Run the script with the sample data to generate PNG graphs:
    ```bash
-   python3 floating_bar_graphs.py --input input/csv/sample_table.csv --client "Employer A" --fy "FY23" --output png
+   python3 floating_bar_graphs.py --input input/csv/sample_table.csv --output png
    ```
 
    This will create PNG files in `output/png/` showing floating bar graphs for each position.
