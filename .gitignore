@@ -17,5 +17,5 @@ venv/
 
 # Exceptions for sample files referenced in README
 !input/csv/example_table.csv
-!output/png/Example Software Engineer.png
-!output/png/Example Data Scientist.png
+!output/svg/Example Software Engineer.svg
+!output/svg/Example Data Scientist.svg

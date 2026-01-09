@@ -41,22 +41,22 @@ Compgrapher (Compensation Grapher) is a tool for generating floating bar graphs 
 
 5. Generate sample PNG graphs:
 
-   Run the script with the sample data to generate PNG graphs:
+   Run the script with the sample data to generate SVG graphs:
    ```bash
-   python3 floating_bar_graphs.py --input input/csv/example_table.csv --output png
+   python3 floating_bar_graphs.py --input input/csv/example_table.csv --output svg
    ```
 
-   This will create PNG files in `output/png/` showing floating bar graphs for each position.
+   This will create SVG files in `output/svg/` showing floating bar graphs for each position.
 
    **Sample Output:**
 
-   <img src="output/png/Example%20Software%20Engineer.png" width="50%" alt="Example Software Engineer">
+   <img src="output/svg/Example%20Software%20Engineer.svg" width="50%" alt="Example Software Engineer">
 
    *Example Software Engineer: Floating bar graph comparing compensation between Employer A and Employer B*
 
    <br>
 
-   <img src="output/png/Example%20Data%20Scientist.png" width="50%" alt="Example Data Scientist">
+   <img src="output/svg/Example%20Data%20Scientist.svg" width="50%" alt="Example Data Scientist">
 
    *Example Data Scientist: Floating bar graph comparing compensation between Employer A and Employer B*
 
