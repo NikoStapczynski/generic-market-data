@@ -10,9 +10,9 @@ Compgrapher (Compensation Grapher) is a tool for generating floating bar graphs 
    cd compgrapher
    ```
 
-2. Set up Python environment:
+2. Set up Python virtual environment:
    ```bash
-   python -m venv venv
+   python3 -m venv venv
    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
    ```
 
@@ -25,7 +25,7 @@ Compgrapher (Compensation Grapher) is a tool for generating floating bar graphs 
 
    The data file (CSV, XLS, XLSX, or ODS) should have a 'POSITION TITLE' column and columns for each employer with salary data. The data alternates between high and low salary ranges on consecutive rows for each position.
 
-   Example structure:
+   Example structure (from `input/csv/sample_table.csv`):
 
    | Row | POSITION TITLE | Employer A | Employer B |
    |-----|----------------|------------|------------|
@@ -38,6 +38,23 @@ Compgrapher (Compensation Grapher) is a tool for generating floating bar graphs 
    - Row 3 & 4: High and low salaries for Job Title 2
 
    The script automatically removes summary columns (e.g., "Comp Data Points", "Comp Average"). Adjust the `bad_columns` list in the script if your data has different summary columns.
+
+5. Generate sample PNG graphs:
+
+   Run the script with the sample data to generate PNG graphs:
+   ```bash
+   python3 floating_bar_graphs.py --input input/csv/sample_table.csv --client "Employer A" --fy "FY23" --output png
+   ```
+
+   This will create PNG files in `output/png/` showing floating bar graphs for each position.
+
+   **Sample Output:**
+
+   ![Job Title 1](output/png/Job%20Title%201.png)
+   *Job Title 1: Floating bar graph comparing salaries between Employer A and Employer B*
+
+   ![Job Title 2](output/png/Job%20Title%202.png)
+   *Job Title 2: Floating bar graph comparing salaries between Employer A and Employer B*
 
 ## Usage
 
@@ -60,3 +77,4 @@ The script will generate graphs in the specified formats in the `output/` subdir
 2. Rename columns to match `{client} Current {fy}`.
 3. Update any hardcoded summary column names if they differ.
 4. Run the script with your parameters.
+The script will generate graphs in the specified formats in the `output/` subdirectories (e.g., `output/html/`, `output/pdf/`, etc.).

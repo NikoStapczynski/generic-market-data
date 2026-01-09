@@ -14,3 +14,8 @@ __pycache__/
 .idea/
 venv/
 .venv/
+
+# Exceptions for sample files referenced in README
+!input/csv/sample_table.csv
+!output/png/Job Title 1.png
+!output/png/Job Title 2.png
