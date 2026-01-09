@@ -5,7 +5,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 from pathlib import Path
 import argparse
-import datetime
 
 salary = 'salary'
 location = 'location'
@@ -156,8 +155,8 @@ def main():
     global title
     parser = argparse.ArgumentParser(description='Generate floating bar graphs for compensation data.')
     parser.add_argument('--client', type=str, help='Name of the client to be highlighted. Defaults to the first employer found in the data set', metavar='Employer')
-    parser.add_argument('--fy', type=str, default=f'FY{datetime.datetime.now().year % 100:02d}', help='Fiscal year')
-    parser.add_argument('--input', type=str, default='input/csv/sample_market_data.csv', help='Path to data file (supports .csv, .xls, .xlsx, .ods)', metavar='path/to/file')
+
+    parser.add_argument('--input', type=str, default='input/csv/sample_table.csv', help='Path to data file (supports .csv, .xls, .xlsx, .ods)', metavar='path/to/file')
     parser.add_argument('--output', nargs='+', default=['html'], choices=['html', 'pdf', 'png', 'svg', 'jpg', 'jpeg', 'webp', 'eps'], help='Output formats: html, pdf, png, svg, jpg, jpeg, webp, eps', metavar='file extension')
 
     args = parser.parse_args()
@@ -199,7 +198,7 @@ def main():
         else:
             raise ValueError("Client name not provided and could not determine from file")
 
-    client_location = f'{args.client} Current {args.fy}'
+    client_location = f'{args.client} Current'
 
     df = read_data(file_path, ext)
     df = remove_summary_columns(df)

@@ -51,9 +51,11 @@ Compgrapher (Compensation Grapher) is a tool for generating floating bar graphs 
    **Sample Output:**
 
    ![Job Title 1](output/png/Job%20Title%201.png)
+
    *Job Title 1: Floating bar graph comparing salaries between Employer A and Employer B*
 
    ![Job Title 2](output/png/Job%20Title%202.png)
+   
    *Job Title 2: Floating bar graph comparing salaries between Employer A and Employer B*
 
 ## Usage
@@ -61,12 +63,11 @@ Compgrapher (Compensation Grapher) is a tool for generating floating bar graphs 
 Run the script with your client parameters:
 
 ```bash
-python floating_bar_graphs.py --client "YourClient" --fy "FY23" --input "your_data.csv" --output html pdf png
+python floating_bar_graphs.py --client "YourClient" --input "your_data.csv" --output html pdf png
 ```
 
 - `--client Employer` (optional): Name of the employer to be highlighted. Defaults to the first employer found in the input file
-- `--fy` (optional): Fiscal year (default: current fiscal year, e.g., FY26)
-- `--input path/to/file` (optional): Path to data file (supports .csv, .xls, .xlsx, .ods) (default: input/csv/sample_market_data.csv)
+- `--input path/to/file` (optional): Path to data file (supports .csv, .xls, .xlsx, .ods) (default: input/csv/sample_table.csv)
 - `--output file extension(s)` (optional): Output format(s) (default: html). Choices: html, pdf, png, svg, jpg, jpeg, webp, eps
 
 The script will generate graphs in the specified formats in the `output/` subdirectories (e.g., `output/html/`, `output/pdf/`, etc.).
@@ -74,7 +75,7 @@ The script will generate graphs in the specified formats in the `output/` subdir
 ## Adapting for a New Client
 
 1. Replace the sample data with your client's data.
-2. Rename columns to match `{client} Current {fy}`.
+2. Rename columns to match `{client} Current`.
 3. Update any hardcoded summary column names if they differ.
 4. Run the script with your parameters.
 The script will generate graphs in the specified formats in the `output/` subdirectories (e.g., `output/html/`, `output/pdf/`, etc.).
