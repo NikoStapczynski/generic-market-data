@@ -1,6 +1,6 @@
-# Generic Market Data Graph Generator
+# Compgrapher
 
-This repository provides a generic template for generating floating bar graphs from market data, adapted from a specific dataset.
+Compgrapher is a tool for generating floating bar graphs from compensation market data.
 
 ## Setup
 
