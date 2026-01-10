@@ -1,6 +1,6 @@
 pandas
-plotly
+matplotlib
+pillow
 openpyxl
 odfpy
 xlrd
-kaleido

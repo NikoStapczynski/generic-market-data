@@ -1,8 +1,7 @@
 import os
 import sys
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
+import matplotlib.pyplot as plt
 from pathlib import Path
 import argparse
 
@@ -113,42 +112,32 @@ def graph(df, output):
         # Sanitize name for filename by replacing slashes with underscores
         safe_name = name.replace('/', '_')
 
-        group.sort_values(inplace=True, by=sal_max, ascending=True)
-        fig = go.Figure([go.Bar(
-            name=title,
-            x=group[location],
-            base=group[sal_min],
-            y=group[sal_max]-group[sal_min],
-            marker_color=group['color'],
-            hovertemplate =
-                '<b>%{x}</b>'+
-                '<br>High: %{y:$,3f}'+
-                '<br>Low: %{base:$,3f}'+
-                '<extra></extra>',
-            showlegend = False
-        )])
+        group = group.sort_values(by=sal_max, ascending=True)
+        fig, ax = plt.subplots()
+        heights = group[sal_max] - group[sal_min]
+        linewidths = [3 if h == 0 else 1 for h in heights]
+        ax.bar(group[location], heights, bottom=group[sal_min], color=group['color'], edgecolor='black', linewidth=linewidths, zorder=3)
 
-        fig.update_traces(dict(marker_line_width=1, marker_line_color="black"))
-        fig.update_yaxes(showgrid=True, gridcolor="#AAA", title_text="Pay Range (Hourly)")
-        fig.update_xaxes(title_text="Location")
-        fig.update_layout(title=name, template="simple_white")
-        # fig.show()  # Commented out to prevent opening browser
+        ax.set_ylabel("Pay Range (Hourly)")
+        ax.set_xlabel("Location")
+        ax.set_title(name)
+        ax.grid(True, color="#AAA", zorder=0)
+
         output_configs = {
-            'html': ('output/html', lambda fig, path: fig.write_html(path)),
-            'pdf': ('output/pdf', lambda fig, path: fig.write_image(path)),
-            'png': ('output/png', lambda fig, path: fig.write_image(path)),
-            'svg': ('output/svg', lambda fig, path: fig.write_image(path)),
-            'jpg': ('output/jpg', lambda fig, path: fig.write_image(path)),
-            'jpeg': ('output/jpeg', lambda fig, path: fig.write_image(path)),
-            'webp': ('output/webp', lambda fig, path: fig.write_image(path)),
-            'eps': ('output/eps', lambda fig, path: fig.write_image(path)),
+            'pdf': ('output/pdf', 'pdf'),
+            'png': ('output/png', 'png'),
+            'svg': ('output/svg', 'svg'),
+            'jpg': ('output/jpg', 'jpg'),
+            'jpeg': ('output/jpeg', 'jpeg'),
+            'webp': ('output/webp', 'webp'),
+            'eps': ('output/eps', 'eps'),
         }
         for fmt in output:
             if fmt in output_configs:
-                dir_path, write_func = output_configs[fmt]
+                dir_path, ext = output_configs[fmt]
                 os.makedirs(dir_path, exist_ok=True)
-                write_func(fig, f"{dir_path}/{safe_name}.{fmt}")
-        
+                fig.savefig(f"{dir_path}/{safe_name}.{fmt}")
+        plt.close(fig)
 
 
 def main():
@@ -156,8 +145,8 @@ def main():
     parser = argparse.ArgumentParser(description='Generate floating bar graphs for compensation data.')
     parser.add_argument('--client', type=str, help='Name of the client to be highlighted. Defaults to the first employer found in the data set', metavar='Employer')
 
-    parser.add_argument('--input', type=str, default='input/csv/sample_table.csv', help='Path to data file (supports .csv, .xls, .xlsx, .ods)', metavar='path/to/file')
-    parser.add_argument('--output', nargs='+', default=['html'], choices=['html', 'pdf', 'png', 'svg', 'jpg', 'jpeg', 'webp', 'eps'], help='Output formats: html, pdf, png, svg, jpg, jpeg, webp, eps', metavar='file extension')
+    parser.add_argument('--input', type=str, default='input/csv/example_table.csv', help='Path to data file (supports .csv, .xls, .xlsx, .ods)', metavar='path/to/file')
+    parser.add_argument('--output', nargs='+', default=['png'], choices=['pdf', 'png', 'svg', 'jpg', 'jpeg', 'webp', 'eps'], help='Output formats: pdf, png, svg, jpg, jpeg, webp, eps', metavar='file extension')
 
     args = parser.parse_args()
 
