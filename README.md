@@ -1,6 +1,6 @@
 # Compgrapher
 
-Compgrapher (Compensation Grapher) is a tool for generating floating bar graphs from compensation market data for the purpose of comparison between employers.
+Compgrapher is a tool that generates floating bar graphs from compensation market data to facilitate employer comparisons.
 
 ## Setup
 
@@ -39,7 +39,7 @@ Compgrapher (Compensation Grapher) is a tool for generating floating bar graphs 
 
    The script automatically removes summary columns (e.g., "Comp Data Points", "Comp Average"). Adjust the `bad_columns` list in the script if your data has different summary columns.
 
-5. Generate sample PNG graphs:
+5. Generate sample SVG graphs:
 
    Run the script with the sample data to generate SVG graphs:
    ```bash
@@ -52,13 +52,10 @@ Compgrapher (Compensation Grapher) is a tool for generating floating bar graphs 
 
    <img src="output/svg/Example%20Software%20Engineer.svg" width="50%" alt="Example Software Engineer">
 
-   *Example Software Engineer: Floating bar graph comparing compensation between Employer A and Employer B*
-
    <br>
 
    <img src="output/svg/Example%20Data%20Scientist.svg" width="50%" alt="Example Data Scientist">
 
-   *Example Data Scientist: Floating bar graph comparing compensation between Employer A and Employer B*
 
 ## Usage
 
