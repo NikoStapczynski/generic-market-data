@@ -2,7 +2,6 @@ import os
 import sys
 import pandas as pd
 import matplotlib.pyplot as plt
-from pathlib import Path
 import argparse
 
 salary = 'salary'
@@ -186,8 +185,6 @@ def main():
                 args.client = client_col
         else:
             raise ValueError("Client name not provided and could not determine from file")
-
-    client_location = f'{args.client} Current'
 
     df = read_data(file_path, ext)
     df = remove_summary_columns(df)
