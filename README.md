@@ -57,10 +57,6 @@ Compgrapher is a tool that generates floating bar graphs from compensation marke
    <img src="output/svg/Example%20Data%20Scientist.svg" width="50%" alt="Example Data Scientist">
 
 
-## Cline Rule: Always Use Python Virtual Environment
-
-**Important:** All Python commands must be executed within the activated virtual environment to ensure consistent dependencies and avoid conflicts. Do not run `python` or `pip` commands outside of the venv.
-
 ## Usage
 
 Run the script with your client parameters:
