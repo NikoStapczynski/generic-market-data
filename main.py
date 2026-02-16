@@ -17,7 +17,7 @@ class FriendlyArgumentParser(argparse.ArgumentParser):
         print("USAGE:")
         print("  python main.py [OPTIONS]\n")
         print("REQUIRED:")
-        print("  --input FILE        Path to data file (.csv, .xls, .xlsx, .ods)")
+        print("  -i FILE        Path to data file (.csv, .xls, .xlsx, .ods)")
         print("                      Default: input/csv/example_table.csv\n")
         print("OPTIONAL:")
         print("  --client NAME       Name of client to highlight (auto-detected if not provided)")
@@ -26,9 +26,9 @@ class FriendlyArgumentParser(argparse.ArgumentParser):
         print("  -h, --help          Show full help message\n")
         print("EXAMPLES:")
         print("  python main.py")
-        print("  python main.py --input data.csv")
-        print("  python main.py --input data.xlsx --client 'Company Name'")
-        print("  python main.py --input data.csv --output html png svg")
+        print("  python main.py -i data.csv")
+        print("  python main.py -i data.xlsx --client 'Company Name'")
+        print("  python main.py -i data.csv --output html png svg")
         print("="*60 + "\n")
         sys.exit(2)
 
@@ -409,18 +409,18 @@ def main():
 
     parser = FriendlyArgumentParser(description='Generate floating bar graphs for compensation data.')
     parser.add_argument('--client', type=str, help='Name of the client to be highlighted. Defaults to the first employer found in the data set', metavar='Employer')
-    parser.add_argument('--input', type=str, default='input/csv/example_table.csv', help='Path to data file (supports .csv, .xls, .xlsx, .ods)', metavar='path/to/file')
+    parser.add_argument('-i', type=str, default='input/csv/example_table.csv', help='Path to data file (supports .csv, .xls, .xlsx, .ods)', metavar='path/to/file')
     parser.add_argument('--output', nargs='+', default=['png'], choices=['html', 'pdf', 'png', 'svg', 'jpg', 'jpeg', 'webp', 'eps'], help='Output formats: html, pdf, png, svg, jpg, jpeg, webp, eps', metavar='file extension')
 
     args = parser.parse_args()
 
-    file_path = args.input
+    file_path = args.i
     
     # Check if file exists
     if not os.path.exists(file_path):
         print_error(
             f"File not found: {file_path}",
-            "Check that the file path is correct. Example: --input input/csv/mydata.csv"
+            "Check that the file path is correct. Example: -i input/csv/mydata.csv"
         )
         sys.exit(1)
     
@@ -505,7 +505,7 @@ def main():
 
     df = make_city_column(df)
     df = combine_high_low(df, args.client)
-    graph_with_html(df, args.output, args.client, args.input)
+    graph_with_html(df, args.output, args.client, args.i)
     
     print("\n" + "="*60)
     print("Success! Charts generated.")

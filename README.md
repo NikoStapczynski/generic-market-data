@@ -4,7 +4,7 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Compgrapher is a powerful tool that generates floating bar graphs from compensation market data to facilitate employer comparisons. Perfect for HR professionals, compensation analysts, and business leaders who need to visualize and compare salary data across multiple employers.
+Generates floating bar graphs from compensation market data to facilitate employer comparisons.
 
 ## Example Output
 
@@ -12,15 +12,6 @@ Compgrapher is a powerful tool that generates floating bar graphs from compensat
 
 <img src="output/svg/Example%20Data%20Scientist.svg" width="60%" alt="Example Data Scientist Compensation">
 
-## Features
-
-- **Multiple Input Formats**: Supports CSV, XLS, XLSX, and ODS files
-- **Multiple Output Formats**: Generate HTML reports, PDF, PNG, SVG, JPG, WEBP, and EPS
-- **Interactive HTML Reports**: Beautiful, responsive reports with embedded charts and statistics
-- **Data Validation**: Automatic detection of data quality issues
-- **Configurable**: YAML configuration file for default settings
-- **Statistics**: Calculate min, max, median, and mean compensation values
-- **Extensible**: Modular architecture for easy customization
 
 ## Quick Start
 
@@ -43,13 +34,13 @@ pip install -r requirements.txt
 
 ```bash
 # Generate PNG graphs from sample data
-python main.py --input input/csv/example_table.csv --output png
+python main.py -i input/csv/example_table.csv --output png
 
 # Generate HTML report with charts
-python main.py --input your_data.csv --output html png
+python main.py -i your_data.csv --output html png
 
 # Specify the client to highlight
-python main.py --client "Your Company" --input data.csv --output html pdf png
+python main.py -c "Your Company" -i data.csv --output html pdf png
 ```
 
 ## Documentation
@@ -77,7 +68,7 @@ python main.py [OPTIONS]
 
 Options:
   --client NAME       Name of the employer to highlight (default: first in data)
-  --input FILE        Path to data file (.csv, .xls, .xlsx, .ods)
+  -i FILE             Path to data file (.csv, .xls, .xlsx, .ods)
   --output FORMAT(s)  Output format(s): html, pdf, png, svg, jpg, jpeg, webp, eps
   --validate          Run data validation checks
   --config FILE       Path to YAML configuration file

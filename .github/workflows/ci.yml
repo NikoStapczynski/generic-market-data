@@ -154,7 +154,7 @@ jobs:
 
       - name: Run main script with test data
         run: |
-          python main.py --input input/csv/test_data.csv --output png svg
+          python main.py -i input/csv/test_data.csv --output png svg
         continue-on-error: true
 
       - name: Verify output files created

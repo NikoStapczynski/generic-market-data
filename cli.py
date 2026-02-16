@@ -100,7 +100,7 @@ def merge_config_with_args(config: Dict[str, Any], args: argparse.Namespace) -> 
     """
     # Map config keys to argument names
     config_mapping = {
-        'input': 'input',
+        'input': 'i',
         'output': 'output',
         'client': 'client',
         'validate': 'validate',
@@ -135,9 +135,9 @@ def create_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 Examples:
-  %(prog)s --input data.csv
-  %(prog)s --input data.csv --output html pdf png
-  %(prog)s --input data.csv --client "Acme Corp" --validate
+  %(prog)s -i data.csv
+  %(prog)s -i data.csv --output html pdf png
+  %(prog)s -i data.csv --client "Acme Corp" --validate
   %(prog)s --config config.yaml --verbose
 
 For more information, visit: https://github.com/nstapc/compgrapher
@@ -153,7 +153,7 @@ For more information, visit: https://github.com/nstapc/compgrapher
     
     # Input/Output
     parser.add_argument(
-        '--input', '-i',
+        '-i',
         type=str,
         default='input/csv/example_table.csv',
         help='Path to data file (supports .csv, .xls, .xlsx, .ods)',
@@ -259,11 +259,11 @@ def validate_args(args: argparse.Namespace) -> None:
         ValueError: If arguments are invalid
     """
     # Check input file exists
-    if not Path(args.input).exists():
-        raise ValueError(f"Input file not found: {args.input}")
+    if not Path(args.i).exists():
+        raise ValueError(f"Input file not found: {args.i}")
     
     # Check file extension is supported
-    ext = Path(args.input).suffix.lower()
+    ext = Path(args.i).suffix.lower()
     if ext not in ['.csv', '.xls', '.xlsx', '.ods']:
         raise ValueError(f"Unsupported file format: {ext}")
     
@@ -306,7 +306,7 @@ def run_cli(args: Optional[List[str]] = None) -> int:
         validate_args(parsed_args)
         
         logger.info(f"Compgrapher v{__version__}")
-        logger.info(f"Input file: {parsed_args.input}")
+        logger.info(f"Input file: {parsed_args.i}")
         logger.info(f"Output formats: {parsed_args.output}")
         
         # Import here to avoid circular imports and allow CLI to work independently
@@ -316,7 +316,7 @@ def run_cli(args: Optional[List[str]] = None) -> int:
         sys.argv = ['compgrapher']
         if parsed_args.client:
             sys.argv.extend(['--client', parsed_args.client])
-        sys.argv.extend(['--input', parsed_args.input])
+        sys.argv.extend(['-i', parsed_args.i])
         sys.argv.extend(['--output'] + parsed_args.output)
         if parsed_args.validate or parsed_args.validate_only:
             sys.argv.append('--validate')
