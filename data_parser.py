@@ -89,6 +89,25 @@ class CompensationDataParser:
             logger.info(f"Removing columns: {columns_to_drop}")
             df = df.drop(columns=columns_to_drop)
         
+        # Find position title column - handle both 'POSITION TITLE' and 'DARTMOUTH POSITION TITLES'
+        position_columns = ['POSITION TITLE', 'DARTMOUTH POSITION TITLES']
+        found_column = None
+        for col in position_columns:
+            if col in df.columns:
+                found_column = col
+                logger.info(f"Using '{found_column}' as position title column")
+                break
+        
+        if not found_column:
+            raise DataValidationError(
+                "Could not find position title column. "
+                f"Expected one of: {', '.join(position_columns)}"
+            )
+        
+        # Rename to standard 'POSITION TITLE' for consistency
+        if found_column != 'POSITION TITLE':
+            df = df.rename(columns={found_column: 'POSITION TITLE'})
+        
         # Forward-fill position titles to handle alternating row format
         # where only the first row of each pair has a position title
         df['POSITION TITLE'] = df['POSITION TITLE'].ffill()

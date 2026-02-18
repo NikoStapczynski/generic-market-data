@@ -4,6 +4,7 @@ graph_generator.py - Enhanced Graph Generation Module for Compgrapher
 This module provides configurable graph generation with statistics calculation,
 multiple output formats, and comprehensive reporting capabilities.
 """
+import io
 import os
 import logging
 from dataclasses import dataclass, field
@@ -228,8 +229,8 @@ class GraphGenerator:
             if self.config.show_grid:
                 ax.grid(True, color=self.config.grid_color, zorder=0)
             
-            # Rotate labels for readability
-            plt.xticks(rotation=45, ha='right')
+            # Rotate and scale labels for readability
+            plt.xticks(rotation=60, ha='right', fontsize=8)
             plt.tight_layout()
             
             # Save in each format
@@ -244,13 +245,72 @@ class GraphGenerator:
         
         return generated_files
     
+    def _generate_chart_svg(self, group: pd.DataFrame, name: str) -> str:
+        """
+        Generate a chart for a position group and return it as an inline SVG string.
+        
+        Args:
+            group: DataFrame group for a single position
+            name: Position name (used as chart title)
+            
+        Returns:
+            Inline SVG string (the <svg>...</svg> element, no XML declaration)
+        """
+        group = group.sort_values(by=self.SAL_MAX, ascending=True)
+        
+        fig, ax = plt.subplots(figsize=(self.config.figure_width, self.config.figure_height))
+        
+        heights = group[self.SAL_MAX] - group[self.SAL_MIN]
+        linewidths = [3 if h == 0 else 1 for h in heights]
+        
+        bars = ax.bar(
+            group[self.LOCATION],
+            heights,
+            bottom=group[self.SAL_MIN],
+            color=group[self.COLOR],
+            edgecolor=self.config.edge_color,
+            linewidth=linewidths,
+            zorder=3,
+            width=self.config.bar_width
+        )
+        
+        if self.config.show_labels:
+            for bar, (_, row) in zip(bars, group.iterrows()):
+                height = bar.get_height()
+                ax.annotate(
+                    f'${row[self.SAL_MAX]:,.0f}',
+                    xy=(bar.get_x() + bar.get_width() / 2, bar.get_y() + height),
+                    xytext=(0, 3),
+                    textcoords='offset points',
+                    ha='center', va='bottom',
+                    fontsize=8
+                )
+        
+        ax.set_ylabel(self.config.ylabel)
+        ax.set_xlabel(self.config.xlabel)
+        ax.set_title(name)
+        
+        if self.config.show_grid:
+            ax.grid(True, color=self.config.grid_color, zorder=0)
+        
+        plt.xticks(rotation=60, ha='right', fontsize=8)
+        plt.tight_layout()
+        
+        buf = io.BytesIO()
+        fig.savefig(buf, format='svg', bbox_inches='tight')
+        plt.close(fig)
+        buf.seek(0)
+        svg_string = buf.read().decode('utf-8')
+        # Strip XML declaration, keep just the <svg>...</svg> element
+        return svg_string[svg_string.find('<svg'):]
+
     def _generate_html_report(
         self,
         df: pd.DataFrame,
         client_name: str,
         input_file: str
     ) -> str:
-        """Generate comprehensive HTML report"""
+        """Generate comprehensive HTML report with embedded charts"""
         logger.info("Generating HTML report")
         
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -258,10 +318,10 @@ class GraphGenerator:
         
         for position_name, group in df.groupby(self.TITLE):
             safe_name = position_name.replace('/', '_')
-            group = group.sort_values(by=self.SAL_MAX, ascending=True)
+            sorted_group = group.sort_values(by=self.SAL_MAX, ascending=True)
             
             employers_data = []
-            for _, row in group.iterrows():
+            for _, row in sorted_group.iterrows():
                 employers_data.append({
                     'employer': row[self.LOCATION],
                     'min_salary': row[self.SAL_MIN],
@@ -269,12 +329,14 @@ class GraphGenerator:
                     'is_client': client_name in row[self.LOCATION]
                 })
             
+            chart_svg = self._generate_chart_svg(group, position_name)
+            
             stats = self.stats.get(position_name)
             position_summaries.append({
                 'name': position_name,
                 'safe_name': safe_name,
                 'employers': employers_data,
-                'chart_file': f'../png/{safe_name}.png',
+                'chart_svg': chart_svg,
                 'stats': stats
             })
         
@@ -481,7 +543,7 @@ class GraphGenerator:
         <div class="position-title">{position['name']}</div>
         {stats_html}
         <div class="chart-container">
-            <img src="{position['chart_file']}" alt="Salary comparison for {position['name']}" style="max-width: 100%; height: auto;">
+            {position['chart_svg']}
         </div>
 
         <table class="salary-table">
