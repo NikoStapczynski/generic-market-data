@@ -972,8 +972,8 @@ def generate_html_report(df, client_name, input_file, per_inspection=None,
 <body>
     <div class="header">
         <h1>{input_stem}</h1>
-        <h2>Town of {client_name}, MA</h2>
-        <h3>FY26</h3>
+        <h2>{client_name}, MA</h2>
+        <h3>FY-26 Market Data</h3>
     </div>
 
     <!-- Legend / Table of Contents -->
